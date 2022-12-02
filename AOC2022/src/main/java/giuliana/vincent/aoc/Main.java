@@ -3,6 +3,7 @@ package giuliana.vincent.aoc;
 public class Main {
 
     public static void main(String[] args) {
-        Day1.Solution();
+        // Day1.solution();
+        Day2.solution();
     }
 }

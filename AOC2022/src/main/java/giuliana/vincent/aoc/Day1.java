@@ -12,7 +12,7 @@ public class Day1 {
 
     private static int TOTAL_ZEROS = 3;
 
-    public static void Solution() {
+    public static void solution() {
         File inputFile = new File("AOC2022/src/main/resources/Day1-input.txt");
         try (Stream<String> lines = Files.lines(Paths.get(inputFile.getAbsolutePath()))) {
 
