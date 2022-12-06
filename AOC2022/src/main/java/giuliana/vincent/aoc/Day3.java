@@ -27,12 +27,8 @@ public class Day3 {
 
             /* Part 2 */
             int sumP2 = 0;
-            String[] groupLines = new String[3];
             for (int i = 0; i <= linesList.size() - 3; i += 3) {
-                groupLines[0] = linesList.get(i);
-                groupLines[1] = linesList.get(i + 1);
-                groupLines[2] = linesList.get(i + 2);
-                sumP2 += findCommonCharacter(groupLines);
+                sumP2 += findCommonCharacter(linesList.get(i), linesList.get(i + 1), linesList.get(i + 2));
             }
 
             System.out.println("Sum (Part 2): " + sumP2);
@@ -58,7 +54,7 @@ public class Day3 {
         throw new RuntimeException("WRONG");
     }
 
-    private static int findCommonCharacter(String[] groupLines) {
+    private static int findCommonCharacter(String... groupLines) {
         for (String s : groupLines[0].split("")) {
             if (groupLines[1].contains(s) && groupLines[2].contains(s)) {
                 char c = s.toCharArray()[0];
