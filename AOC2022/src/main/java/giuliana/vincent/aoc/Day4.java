@@ -13,6 +13,7 @@ public class Day4 {
         File inputFile = new File("AOC2022/src/main/resources/Day4-input.txt");
         try (Stream<String> lines = Files.lines(Paths.get(inputFile.getAbsolutePath()))) {
             int fullyContainedCount = 0;
+            int anyOverlapCount = 0;
 
             for (String line : lines.collect(Collectors.toList())) {
                 String[] pairs = line.split(",");
@@ -27,8 +28,13 @@ public class Day4 {
                 if (fullyContainsRange(firstStart, firstEnd, secondStart, secondEnd) ||
                         fullyContainsRange(secondStart, secondEnd, firstStart, firstEnd))
                     fullyContainedCount++;
+
+                if (anyOverlap(firstStart, firstEnd, secondStart, secondEnd) ||
+                        anyOverlap(secondStart, secondEnd, firstStart, firstEnd))
+                    anyOverlapCount++;
             }
             System.out.println("Total pairs (Part 1): " + fullyContainedCount);
+            System.out.println("Total pairs (Part 2): " + anyOverlapCount);
         } catch (IOException e) {
             System.out.println("Exception: " + e.getMessage());
         }
@@ -38,11 +44,13 @@ public class Day4 {
         return (firstStart <= secondStart) && (firstEnd >= secondEnd);
     }
 
-    private static String integerRangeString(int start, int end) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = start; i <= end; i++) {
-            sb.append(i);
+    private static boolean anyOverlap(final int firstStart, final int firstEnd, final int secondStart, final int secondEnd) {
+        if ((firstStart <= secondStart) && (firstEnd >= secondStart)) {
+            return true;
+        } else if ((secondStart <= firstStart) && (secondEnd >= firstStart)) {
+            return true;
+        } else {
+            return false;
         }
-        return sb.toString();
     }
 }
