@@ -30,6 +30,7 @@ public class Day5 {
 
             List<String> instructions = input.subList(iter + 2, input.size());
             List<Deque<String>> stackList = createStackedCratesList(numberOfStacks, crates);
+            List<Deque<String>> stackListCopy = createStackedCratesList(numberOfStacks, crates);
 
             for (String instruction : instructions) {
                 String[] movement = instruction.split(" ");
@@ -41,6 +42,8 @@ public class Day5 {
                     stackList.get(moveTo - 1).add(stackList.get(moveFrom - 1).getLast());
                     stackList.get(moveFrom - 1).removeLast();
                 }
+
+                moveMultipleCrates(stackListCopy, moveNumber, moveFrom, moveTo);
             }
 
             StringBuilder sb = new StringBuilder();
@@ -50,6 +53,14 @@ public class Day5 {
             }
 
             System.out.println("Crate list (Part 1): " + sb);
+
+            sb.delete(0, sb.length());
+
+            for (Deque<String> stack : stackListCopy) {
+                sb.append(stack.getLast());
+            }
+
+            System.out.println("Crate list (Part 2): " + sb);
 
         } catch (IOException e) {
             System.out.println("Exception: " + e.getMessage());
@@ -70,5 +81,19 @@ public class Day5 {
         }
 
         return crateStacksList;
+    }
+
+    private static void moveMultipleCrates(List<Deque<String>> crateStacks, final int moveNumber, final int moveFrom, final int moveTo) {
+        Deque<String> tmpStack = new ArrayDeque<>();
+
+        for (int i = 0; i < moveNumber; i++) {
+            tmpStack.add(crateStacks.get(moveFrom - 1).getLast());
+            crateStacks.get(moveFrom - 1).removeLast();
+        }
+
+        for (int i = 0; i < moveNumber; i++) {
+            crateStacks.get(moveTo - 1).add(tmpStack.getLast());
+            tmpStack.removeLast();
+        }
     }
 }
