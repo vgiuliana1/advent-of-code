@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public class Day6 {
 
-    private final static int CHARACTER_COUNT = 4;
+    private final static int CHARACTER_COUNT = 14; // switch between 4 and 14 for Part 1, Part 2 respectively
 
     public static void solution() {
         File inputFile = new File("AOC2022/src/main/resources/Day6-input.txt");
@@ -24,13 +24,11 @@ public class Day6 {
                     characterSet.add(inputLine.charAt(i + k));
                 }
                 if (characterSet.size() == CHARACTER_COUNT) {
-                    System.out.println("Marker count: " + (i + 4));
+                    System.out.println("Marker count: " + (i + CHARACTER_COUNT));
                     break;
                 }
             }
-
-        } catch (
-                IOException e) {
+        } catch (IOException e) {
             System.out.println("Error:" + e.getMessage());
         }
     }
