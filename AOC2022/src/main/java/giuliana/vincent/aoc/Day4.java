@@ -47,10 +47,6 @@ public class Day4 {
     private static boolean anyOverlap(final int firstStart, final int firstEnd, final int secondStart, final int secondEnd) {
         if ((firstStart <= secondStart) && (firstEnd >= secondStart)) {
             return true;
-        } else if ((secondStart <= firstStart) && (secondEnd >= firstStart)) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return (secondStart <= firstStart) && (secondEnd >= firstStart);
     }
 }
