@@ -8,6 +8,7 @@ public class Main {
         // Day3.solution();
         // Day4.solution();
         // Day5.solution();
-        Day6.solution();
+        // Day6.solution();
+        Day7.solution();
     }
 }
