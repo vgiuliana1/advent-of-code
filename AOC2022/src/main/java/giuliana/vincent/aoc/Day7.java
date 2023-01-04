@@ -20,8 +20,8 @@ public class Day7 {
         try (Stream<String> lines = Files.lines(Paths.get(inputFile.getAbsolutePath()))) {
 
             Directory root = new Directory();
+            root.setDirectoryName("/");
             Directory currentDirectory = root;
-            Directory parentDirectory = null;
 
             for (String line : lines.collect(Collectors.toList())) {
                 System.out.println(root);
@@ -30,14 +30,9 @@ public class Day7 {
                 if (Objects.equals(firstPart, "$")) {
                     if (lineParts[1].equals("cd")) {
                         if (!lineParts[2].equals("..") && !lineParts[2].equals("/")) {
-                            parentDirectory = currentDirectory;
-                            currentDirectory = currentDirectory
-                                    .getDirectories()
-                                    .stream()
-                                    .filter(d -> d.getDirectoryName().equals(lineParts[2]))
-                                    .collect(Collectors.toList()).get(0);
+                            currentDirectory = getDirectoryByName(currentDirectory, lineParts[2]);
                         } else if (lineParts[2].equals("..")) {
-                            currentDirectory = parentDirectory;
+                            currentDirectory = getDirectoryByName(root, currentDirectory.getParentDirectoryName());
                         }
                     }
                 } else {
@@ -48,6 +43,7 @@ public class Day7 {
                                         .directoryName(lineParts[1])
                                         .directories(new ArrayList<>())
                                         .fileNamesAndSizes(new HashMap<>())
+                                        .parentDirectoryName(currentDirectory.getDirectoryName())
                                         .build());
                     } else {
                         currentDirectory
@@ -56,6 +52,7 @@ public class Day7 {
                     }
                 }
             }
+            System.out.println("done creating file system");
 /*
 
             Directory d = new Directory();
@@ -108,6 +105,16 @@ public class Day7 {
         return sum + (total > 100000 ? 0 : total);
     }
 
+    public static Directory getDirectoryByName(Directory currentDirectory, final String directoryName) {
+        if (currentDirectory.getDirectoryName().equals(directoryName)) return currentDirectory;
+
+        return currentDirectory
+                .getDirectories()
+                .stream()
+                .filter(d -> d.getDirectoryName().equals(directoryName))
+                .collect(Collectors.toList()).get(0);
+    }
+
     @Data
     @Builder
     @AllArgsConstructor
@@ -116,7 +123,7 @@ public class Day7 {
         private String directoryName;
         private List<Directory> directories = new ArrayList<>();
         private Map<String, Integer> fileNamesAndSizes = new HashMap<>();
-        private Directory parentDirectory;
+        private String parentDirectoryName;
     }
 
     private static boolean isDirectory(String s) {
