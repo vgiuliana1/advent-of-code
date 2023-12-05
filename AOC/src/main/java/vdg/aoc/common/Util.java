@@ -1,18 +1,29 @@
 package vdg.aoc.common;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Util {
 
-    final static List<String> DIGIT_WORDS = Arrays.asList("one", "two", "three", "four", "five", "six", "seven", "eight", "nine");
-    final static List<String> NUMBER_WORDS = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9");
+    final static Map<String, String> NUMBERS = Map.of(
+            "one", "1",
+            "two", "2",
+            "three", "3",
+            "four", "4",
+            "five", "5",
+            "six", "6",
+            "seven", "7",
+            "eight", "8",
+            "nine", "9"
+    );
 
     public static List<String> readFile(final String path) {
         List<String> list = new ArrayList<>();
@@ -29,21 +40,43 @@ public class Util {
         return s.matches("\\d");
     }
 
-    public static String replaceDigitWordsWithNumbers(String line) {
+    public static String findFirstDigit(String line) {
         StringBuilder sb = new StringBuilder();
         String[] newLine = line.split("");
 
         for (String s : newLine) {
-            sb.append(s);
-            StringBuilder finalSb = sb;
-            if (DIGIT_WORDS.stream().anyMatch(d -> finalSb.toString().contains(d))) {
-                String sbReplaced = sb.toString();
-                for (int i = 0; i <= 8; i++) {
-                    sbReplaced = sbReplaced.replace(DIGIT_WORDS.get(i), NUMBER_WORDS.get(i));
+            if (isDigit(s)) {
+                return s;
+            } else {
+                sb.append(s);
+                if (NUMBERS.keySet().stream().anyMatch(d -> sb.toString().contains(d))) {
+                    for (String k : NUMBERS.keySet()) {
+                        if (sb.toString().contains(k))
+                            return NUMBERS.get(k);
+                    }
                 }
-                sb = new StringBuilder(sbReplaced);
             }
         }
-        return sb.toString();
+        return "0";
+    }
+
+    public static String findLastDigit(String line) {
+        StringBuilder sb = new StringBuilder();
+        String[] newLine = StringUtils.reverse(line).split("");
+
+        for (String s : newLine) {
+            if (isDigit(s)) {
+                return s;
+            } else {
+                sb.append(s);
+                if (NUMBERS.keySet().stream().anyMatch(d -> sb.toString().contains(StringUtils.reverse(d)))) {
+                    for (String k : NUMBERS.keySet()) {
+                        if (sb.toString().contains(k))
+                            return NUMBERS.get(k);
+                    }
+                }
+            }
+        }
+        return "0";
     }
 }

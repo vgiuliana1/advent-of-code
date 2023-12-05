@@ -23,19 +23,20 @@ public class Day1 {
             final String last = digits.get(digits.size() - 1);
             sum += Integer.parseInt(first + last);
         }
+        // Correct answer: 55386
+        // Failed attempts:
         System.out.println("part 1 = " + sum);
     }
 
     private static void part2(List<String> input) {
         int sum = 0;
         for (String s : input) {
-            String newLine = Util.replaceDigitWordsWithNumbers(s);
-            String[] separated = newLine.split("");
-            List<String> digits = Arrays.stream(separated).filter(Util::isDigit).collect(Collectors.toList());
-            final String first = digits.get(0);
-            final String last = digits.get(digits.size() - 1);
+            final String first = Util.findFirstDigit(s);
+            final String last = Util.findLastDigit(s);
             sum += Integer.parseInt(first + last);
         }
+        // Correct answer: 54824
+        // Failed attempts: 54807
         System.out.println("part 2 = " + sum);
     }
 }
