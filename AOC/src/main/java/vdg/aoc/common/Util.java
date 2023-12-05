@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class Util {
 
-    final static List<String> DIGIT_WORDS = Arrays.asList("one", "two", "three", "four", "five", "si", "seven", "eight", "nine");
+    final static List<String> DIGIT_WORDS = Arrays.asList("one", "two", "three", "four", "five", "six", "seven", "eight", "nine");
     final static List<String> NUMBER_WORDS = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9");
 
     public static List<String> readFile(final String path) {
