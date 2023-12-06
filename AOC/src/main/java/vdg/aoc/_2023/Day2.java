@@ -56,13 +56,11 @@ public class Day2 {
 
     private static void part2(List<String> input) {
         int sum = 0;
-        int gameId = 0;
         for (String s : input) {
             int minRed = 0;
             int minGreen = 0;
             int minBlue = 0;
 
-            gameId = Integer.parseInt(s.substring(s.indexOf(" ") + 1, s.indexOf(":")));
             final String games = s.substring(s.indexOf(":"));
             String[] gamesArray = games.split(";");
             gamesArray[0] = gamesArray[0].replace(": ", "");
