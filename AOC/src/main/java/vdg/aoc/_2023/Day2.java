@@ -2,10 +2,9 @@ package vdg.aoc._2023;
 
 import vdg.aoc.common.Util;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Day2 {
 
@@ -72,9 +71,9 @@ public class Day2 {
                     colorCount.put(cubeColor[1], Integer.valueOf(cubeColor[0]));
                 }
 
-                minRed = Objects.isNull(colorCount.get(R)) ? minRed : (minRed > colorCount.get(R) ? minRed : colorCount.get(R));
-                minGreen = Objects.isNull(colorCount.get(G)) ? minGreen : (minGreen > colorCount.get(G) ? minGreen : colorCount.get(G));
-                minBlue = Objects.isNull(colorCount.get(B)) ? minBlue : (minBlue > colorCount.get(B) ? minBlue : colorCount.get(B));
+                minRed = Math.max(minRed, colorCount.getOrDefault(R, minRed));
+                minGreen = Math.max(minGreen, colorCount.getOrDefault(G, minGreen));
+                minBlue = Math.max(minBlue, colorCount.getOrDefault(B, minBlue));
             }
 
             if (minRed == 0) minRed = 1;
