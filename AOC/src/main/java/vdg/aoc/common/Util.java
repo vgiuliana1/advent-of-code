@@ -34,6 +34,11 @@ public class Util {
         return list;
     }
 
+    public static String[] readFileArray(final String path) {
+        // convert List<String> to String[]
+        return readFile(path).toArray(new String[0]);
+    }
+
     public static boolean isDigit(String s) {
         return s.matches("\\d");
     }
@@ -84,5 +89,9 @@ public class Util {
 
     public static int valueOrZero(Integer i) {
         return Objects.isNull(i) ? 0 : i;
+    }
+
+    public static boolean between(final int lowerBound, final int comparator, final int upperBound, final boolean inclusive) {
+        return inclusive ? ((comparator >= lowerBound) && (comparator <= upperBound)) : ((comparator > lowerBound) && (comparator < upperBound));
     }
 }
