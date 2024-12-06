@@ -9,10 +9,12 @@ import java.util.stream.Collectors;
 
 public class Day4 {
 
-    public static int ROW_LENGTH;
-    public static int NUMBER_ROWS;
+    public static int COLUMNS;
+    public static int ROWS;
     public static String XMAS = "XMAS";
     public static String SAMX = "SAMX";
+    public static String MAS = "MAS";
+    public static String SAM = "SAM";
 
     public static void main(String[] args) {
         final List<String> input = Util.readFile("AOC/src/main/resources/_2024/Day4.txt");
@@ -22,39 +24,39 @@ public class Day4 {
     }
 
     private static void part1(List<String> crossword) {
-        ROW_LENGTH = crossword.get(0).length();
-        NUMBER_ROWS = crossword.size();
+        COLUMNS = crossword.get(0).length();
+        ROWS = crossword.size();
         int sum = 0;
 
         // stream through crossword and count the number of times XMAS and SAMX appears in each string
         sum += crossword.stream().mapToInt(s -> countOccurrences(s, XMAS)).sum();
         sum += crossword.stream().mapToInt(s -> countOccurrences(s, SAMX)).sum();
 
-        char[][] _cRotatedCrossword = new char[NUMBER_ROWS][ROW_LENGTH];
-        for (int i = 0; i < ROW_LENGTH; i++) {
-            for (int j = 0; j < NUMBER_ROWS; j++) {
-                _cRotatedCrossword[j][ROW_LENGTH - 1 - i] = crossword.get(i).charAt(j);
+        char[][] _cRotatedCrossword = new char[ROWS][COLUMNS];
+        for (int i = 0; i < COLUMNS; i++) {
+            for (int j = 0; j < ROWS; j++) {
+                _cRotatedCrossword[j][COLUMNS - 1 - i] = crossword.get(i).charAt(j);
             }
         }
         List<String> rotatedCrossword = Arrays.stream(_cRotatedCrossword).map(String::valueOf).collect(Collectors.toList());
         sum += rotatedCrossword.stream().mapToInt(s -> countOccurrences(s, XMAS)).sum();
         sum += rotatedCrossword.stream().mapToInt(s -> countOccurrences(s, SAMX)).sum();
 
-        char[][] inputMatrix = new char[NUMBER_ROWS][ROW_LENGTH];
+        char[][] inputMatrix = new char[ROWS][COLUMNS];
 
-        for (int i = 0; i < NUMBER_ROWS; i++) {
-            for (int j = 0; j < ROW_LENGTH; j++) {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
                 inputMatrix[i][j] = crossword.get(i).charAt(j);
             }
         }
 
         /* BOTTOM LEFT TO TOP RIGHT */
         List<String> ltr_diagonals = new ArrayList<>();
-        for (int row = NUMBER_ROWS - 1; row >= 0; row--) {
+        for (int row = ROWS - 1; row >= 0; row--) {
             ltr_diagonals.add(bottomRight(inputMatrix, row, 0, ""));
         }
 
-        for (int col = 1; col < ROW_LENGTH; col++) {
+        for (int col = 1; col < COLUMNS; col++) {
             ltr_diagonals.add(bottomRight(inputMatrix, 0, col, ""));
         }
 
@@ -66,11 +68,11 @@ public class Day4 {
 
         /* BOTTOM RIGHT TO TOP LEFT */
         List<String> rtl_diagonals = new ArrayList<>();
-        for (int row = NUMBER_ROWS - 1; row >= 0; row--) {
-            rtl_diagonals.add(bottomLeft(inputMatrix, row, ROW_LENGTH - 1, ""));
+        for (int row = ROWS - 1; row >= 0; row--) {
+            rtl_diagonals.add(bottomLeft(inputMatrix, row, COLUMNS - 1, ""));
         }
 
-        for (int col = ROW_LENGTH - 1; col > 0; col--) {
+        for (int col = COLUMNS - 1; col > 0; col--) {
             rtl_diagonals.add(bottomLeft(inputMatrix, 0, col - 1, ""));
         }
 
@@ -84,6 +86,27 @@ public class Day4 {
 
     private static void part2(final List<String> input) {
         int sum = 0;
+
+        char[][] inputMatrix = new char[ROWS][COLUMNS];
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                inputMatrix[i][j] = input.get(i).charAt(j);
+            }
+        }
+
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLUMNS; col++) {
+                char s = input.get(row).charAt(col);
+
+                char tl = _topLeft(inputMatrix, row, col);
+                char tr = _topRight(inputMatrix, row, col);
+                char bl = _bottomLeft(inputMatrix, row, col);
+                char br = _bottomRight(inputMatrix, row, col);
+
+                sum += (("" + tl + s + br).contains(MAS) || ("" + tl + s + br).contains(SAM)) && (("" + tr + s + bl).contains(MAS) || ("" + tr + s + bl).contains(SAM)) ? 1 : 0;
+
+            }
+        }
 
         System.out.println("part 2 = " + sum);
     }
@@ -114,5 +137,25 @@ public class Day4 {
         } catch (Exception e) {
             return str;
         }
+    }
+
+    private static char _topLeft(char[][] crossword, final int row, int col) {
+        if (row > 0 && col > 0) return crossword[row - 1][col - 1];
+        return ' ';
+    }
+
+    private static char _topRight(char[][] crossword, final int row, int col) {
+        if (row > 0 && col < COLUMNS - 1) return crossword[row - 1][col + 1];
+        return ' ';
+    }
+
+    private static char _bottomRight(char[][] crossword, final int row, int col) {
+        if (row < ROWS - 1 && col < COLUMNS - 1) return crossword[row + 1][col + 1];
+        return ' ';
+    }
+
+    private static char _bottomLeft(char[][] crossword, final int row, int col) {
+        if (row < ROWS - 1 && col > 0) return crossword[row + 1][col - 1];
+        return ' ';
     }
 }
