@@ -13,7 +13,7 @@ public class Day5 {
         final List<String> input = Util.readFile("AOC/src/main/resources/_2024/Day5.txt");
 
         List<String> orderingRules = new ArrayList<>();
-        List<String> updateNumbers = new ArrayList<>();
+        List<List<Integer>> updateNumbers = new ArrayList<>();
 
         boolean switched = false;
         for (String line : input) {
@@ -25,7 +25,7 @@ public class Day5 {
             if (!switched) {
                 orderingRules.add(line);
             } else {
-                updateNumbers.add(line);
+                updateNumbers.add(Arrays.stream(line.split(",")).map(Integer::parseInt).collect(Collectors.toList()));
             }
         }
 
@@ -33,54 +33,43 @@ public class Day5 {
         part2(input);
     }
 
-    private static void part1(List<String> orderingRules, List<String> updateNumbers) {
+    private static void part1(List<String> orderingRules, List<List<Integer>> updateNumbers) {
         int sum = 0;
 
         try {
-            Map<String, Set<String>> pagesAndOrders = new HashMap<>();
-            Set<String> allPageNumbers = new HashSet<>();
+            Map<Integer, List<Integer>> rules = new HashMap<>();
 
             for (String line : orderingRules) {
-                String[] split = line.split("\\|");
-                allPageNumbers.addAll(Arrays.asList(split));
-                if (pagesAndOrders.containsKey(split[0])) {
-                    Set<String> afters = new HashSet<>(pagesAndOrders.get(split[0]));
+                Integer[] split = Arrays.stream(line.split("\\|")).map(Integer::parseInt).toArray(Integer[]::new);
+                if (rules.containsKey(split[0])) {
+                    List<Integer> afters = new ArrayList<>(rules.get(split[0]));
                     afters.add(split[1]);
-                    pagesAndOrders.put(split[0], afters);
+                    rules.put(split[0], afters);
                 } else {
-                    pagesAndOrders.put(split[0], Set.of(split[1]));
+                    rules.put(split[0], List.of(split[1]));
                 }
             }
 
-            allPageNumbers.removeIf(pagesAndOrders::containsKey); // left with all page numbers that aren't before others
-            if (!allPageNumbers.isEmpty())
-                pagesAndOrders.put(new ArrayList<>(allPageNumbers).get(0), Collections.emptySet());
+            List<List<Integer>> correctUpdates = new ArrayList<>();
 
-            List<String> pageOrder = pagesAndOrders
-                    .entrySet()
-                    .stream()
-                    .sorted((f, s) -> Integer.compare(s.getValue().size(), f.getValue().size()))
-                    .map(Map.Entry::getKey)
-                    .collect(Collectors.toList());
-            System.out.println(pageOrder);
+            for (List<Integer> update : updateNumbers) {
+                List<Integer> pages = new ArrayList<>();
+                boolean validUpdate = true;
 
-            final int numberOfPages = pageOrder.size();
-            List<List<String>> correctUpdates = new ArrayList<>();
+                for (Integer page : update) {
+                    final List<Integer> rule = rules.get(page);
 
-            for (String update : updateNumbers) {
-                List<String> updatePages = Arrays.asList(update.split(","));
-                List<String> pagesToCompare = new ArrayList<>(pageOrder);
+                    if (rule != null && pages.stream().anyMatch(rule::contains)) {
+                        validUpdate = false;
+                    }
 
-                if (numberOfPages != updatePages.size()) {
-                    pagesToCompare.removeIf(p -> !updatePages.contains(p));
+                    pages.add(page);
                 }
 
-                if (pagesToCompare.equals(updatePages)) {
-                    correctUpdates.add(updatePages);
-                }
+                if (validUpdate) correctUpdates.add(pages);
             }
 
-            sum = correctUpdates.stream().mapToInt(u -> Integer.parseInt(u.get(Math.round((float) u.size() /2) - 1))).sum();
+            sum = correctUpdates.stream().mapToInt(u -> u.get((u.size() - 1) / 2)).sum();
 
         } catch (Exception e) {
             e.printStackTrace();
