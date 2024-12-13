@@ -30,7 +30,7 @@ public class Day5 {
         }
 
         part1(orderingRules, updateNumbers);
-        part2(input);
+//        part2(input);
     }
 
     private static void part1(List<String> orderingRules, List<List<Integer>> updateNumbers) {
@@ -51,6 +51,7 @@ public class Day5 {
             }
 
             List<List<Integer>> correctUpdates = new ArrayList<>();
+            List<List<Integer>> incorrectUpdates = new ArrayList<>();
 
             for (List<Integer> update : updateNumbers) {
                 List<Integer> pages = new ArrayList<>();
@@ -61,12 +62,14 @@ public class Day5 {
 
                     if (rule != null && pages.stream().anyMatch(rule::contains)) {
                         validUpdate = false;
+                        continue;
                     }
 
                     pages.add(page);
                 }
 
                 if (validUpdate) correctUpdates.add(pages);
+                else incorrectUpdates.add(pages);
             }
 
             sum = correctUpdates.stream().mapToInt(u -> u.get((u.size() - 1) / 2)).sum();
@@ -76,11 +79,13 @@ public class Day5 {
         }
 
         System.out.println("part 1 = " + sum);
-    }
 
-    private static void part2(final List<String> input) {
-        int sum = 0;
 
-        System.out.println("part 2 = " + sum);
+        /********************
+         ****   PART 2   ****
+         ********************/
+
+
+
     }
 }
