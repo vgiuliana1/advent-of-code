@@ -8,15 +8,10 @@ with open('input/day1.txt', 'r') as file:
         line = line.strip()
         direction = line[0]
         amount = int(line[1:])
-        if direction == 'R':
-            CURRENT_POSITION += amount
-        else:
-            CURRENT_POSITION -= amount
         
-        if CURRENT_POSITION > 99:
-            CURRENT_POSITION = CURRENT_POSITION % 100
-        elif CURRENT_POSITION < 0:
-            CURRENT_POSITION = CURRENT_POSITION % 100
+        CURRENT_POSITION += amount if direction == 'R' else -amount
+        
+        CURRENT_POSITION %=  100
         
         if CURRENT_POSITION == 0:
             zeros += 1
